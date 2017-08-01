@@ -17,7 +17,20 @@
       <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
+    <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
+
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      :before-close="handleClose">
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
+     
 </template>
 
 <script>
@@ -25,7 +38,13 @@ export default {
   name: 'hello',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      dialogVisible:false
+    }
+  },
+  methods:{
+    handleClose:function(){
+      this.dialogVisible=false;
     }
   }
 }
