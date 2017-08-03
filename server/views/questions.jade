@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title 
+  ul
+    each quetion in quetions 
+      li
+        h4 #{quetion.name}    
+        span #{quetion.content}
+        span #{quetion.meta.createAt}
+        span #{quetion.meta.updateAt}

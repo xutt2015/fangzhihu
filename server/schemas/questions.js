@@ -1,12 +1,15 @@
 var mongoose = require('mongoose');
  
 //申明一个mongoons对象
-var UsersSchema = new mongoose.Schema({
- name: String,
- emailPhone: String,
- password: String,
- // sign:'没有最好，只有更好！',
- // image:'../../../static/images/admin.jpg',
+var QuestionsSchema = new mongoose.Schema({
+ title: String,
+ topics: Array,
+ content: String,
+ isAnonymous:Boolean,
+ userId:String,
+ // CollapseContent:String,
+ like:Number,
+ comment:Number,
  meta: { 
   createAt: {
    type: Date,
@@ -20,7 +23,7 @@ var UsersSchema = new mongoose.Schema({
 })
  
 //每次执行都会调用,时间更新操作
-UsersSchema.pre('save', function(next) {
+QuestionsSchema.pre('save', function(next) {
  if(this.isNew) {
   this.meta.createAt = this.meta.updateAt = Date.now();
  }else {
@@ -31,24 +34,23 @@ UsersSchema.pre('save', function(next) {
 })
  
 //查询的静态方法
-UsersSchema.statics = {
+QuestionsSchema.statics = {
  fetch: function(cb) { //查询所有数据
   return this
    .find()
    .sort('meta.updateAt') //排序
    .exec(cb) //回调
  },
- findById: function(emailPhone, cb) { //根据emailPhone查询单条数据
+ findById: function(id, cb) { //根据emailPhone查询单条数据
   return this
-   .findOne({emailPhone: emailPhone})   
+   .findOne({_id: id})   
    .exec(cb)
  },
  insert:function(document,cb){
   this.create(document);
   cb();
-  // return UsersSchema.save();
  }
 }
  
 //暴露出去的方法
-module.exports = UsersSchema 
+module.exports = QuestionsSchema 

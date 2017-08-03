@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" ref='app'>
     <!-- <img src="./assets/logo.png"> -->
     <router-view :userInfo=userInfo @upup='changeUserInfo'></router-view>
   </div>

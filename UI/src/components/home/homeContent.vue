@@ -1,9 +1,9 @@
 <template>
-    <div class="homeContent">
+    <div class="homeContent" @onload="loadQuestionsList">
         <div class='Topstory-mainColumn'>
             <div class="TopstoryHeader">
               <el-card class='TopstoryHeader'>
-                 <div class="askQuestion" @click='AskDialogVisible = true'>
+                 <div class="askQuestion" @click='AskDialogOpen'>
                      <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="Icon Icon--question" aria-hidden="true" style="height: 18px; width: 18px;"><title></title><g><g transform="translate(-3 -3)" fill="#8590A6" fill-rule="evenodd">     <path d="M3.833 6.356c0-1.66 1.334-3.007 2.993-3.007h9.348c1.653 0 2.993 1.338 2.993 3.006v8.498c0 1.66-1.266 3.467-2.812 4.03l-1.09.396c-2.08.757-5.447.76-7.53 0l-1.09-.396c-1.553-.565-2.812-2.363-2.812-4.03V6.356zm1.643.67v7.492c0 1.1.84 2.314 1.873 2.697l2.277.844c1.035.383 2.712.383 3.746 0l2.278-.845c1.036-.384 1.874-1.59 1.874-2.697V7.026c0-1.1-.897-2.003-2.003-2.003H7.48c-1.118 0-2.004.897-2.004 2.003z"></path>     <path d="M13.012 11.46l-.422.29c-.232.177-.433.53-.433.53s-.08.134-.11.398v.16h-1.63v-.24c.02-.555.11-.86.343-1.13.364-.422 1.168-.935 1.202-.956.114-.086.212-.184.284-.288.17-.23.244-.412.244-.59 0-.25-.074-.478-.22-.682-.143-.197-.41-.296-.798-.296-.385 0-.648.12-.806.368-.162.254-.243.523-.243.796l-.005.23-1.656-.003.003-.23c.043-1.007.406-1.732 1.078-2.155.424-.27 1.113-.396 1.657-.406.873.01 1.39.193 1.923.575.54.387.815.965.815 1.72 0 .422-.135.82-.4 1.18-.14.193-.442.434-.826.73z"></path>     <ellipse cx="11.226" cy="14.791" rx="1.095" ry="1.116"></ellipse>   </g></g></svg>
                      提问
                  </div>
@@ -32,10 +32,11 @@
                     <div class="content" @click="expandContent(index)" :class="{isCollapsed:item.isCollapsed}"> 
                         <span v-show="!item.isCollapsed">{{item.like}}人赞同了该回答</span>
                         <div class="artical">
-                            <div v-html="item.isCollapsed?item.CollapseContent:item.content">
+                            <div>
+                            <p v-html="item.isCollapsed?item.CollapseContent:item.content"></p>
                             </div>
-                            <el-button v-show="item.isCollapsed" type="info2" style="position: absolute; margin-top: -40px;margin-left: 170px;">
-                                <i class="el-icon-arrow-down" style="float:right;margin-left: 5px;"></i>
+                            <el-button v-show="item.isCollapsed" type="info2" style="position: absolute; margin-top: -40px;margin-left: 230px;"> 
+                                <i class="el-icon-arrow-down" style="float:right;margin-left:5px;"></i>
                                 阅读全文
                             </el-button>
                         </div>
@@ -83,7 +84,7 @@
             </ul>
         </el-card>
     </div>
-    <router-view :AskDialogVisible=AskDialogVisible @closeAskModel='closeAskModel'></router-view>
+    <router-view :AskDialogVisible=AskDialogVisible @closeAskModel='closeAskModel' @addTopic='addTopic' ref='askQuestionDialog'></router-view>
 </div>
 </template>
 <script>
@@ -138,52 +139,63 @@
                     icon:"el-icon-information",
                     color:"#5478f0"
                 }],
-                ContentItems:[{
-                    topic:'Vue.js',
-                    image:'../../../static/images/admin.jpg',
-                    name:'admin',
-                    sign:'没有最好，只有更好！',
-                    title:'vue，react之类的框架是不是弱化了对前端人员js水平的要求？',
-                    like:15,
-                    content:`<p>现在是面向组件化、面向函数开发，vue和react给前端带来的是一种思考问题解决方案的新思维，经过大量的实践之后，这种思维已经获得了很大一部分人的认同。</p>
-                        <p>计算机世界也像人类世界一样，会有越来越强大的工具，而不再是原始社会的刀耕火种，一些落后的浏览器也会慢慢的淘汰，也会有层出不穷的新框架出来让人眼前一亮，很多中年人现在回想起刚刚改革开放的时候，后悔自己错过了去拼去闯的机会，现在前端界也类似刚刚出现变革的时候，框架化开发席卷了前端行业，错过这次变革的人肯定很多，他们守旧、固化思维模式和开发方式，不出几年，就很难在适应前端市场的需求。</p>
-                        <p>面对如此多的框架和库，我们无法做到精通所有，但是要做到接受新的知识、新的理念，不要做一个几年后被行业淘汰的人。</p>
-                        <p>总得来看，现在对前端人员的要求提高了，这种提高是指学习新知识的能力、还要要大局观意识，不再做一个普通的切图仔。
-                        </p>`,
-                    editDate:'昨天 10:17',
-                    comment:3,
-                    isCollapsed:true,
-                    CollapseContent:`<p>现在是面向组件化、面向函数开发，vue和react给前端带来的是一种思考问题解决方案的新思维，经过大量的实践之后，这种思维已经获得了很大一部分人的认同。</p>
-                        <p>计算机世界也像人类世界一样，会有越来越强大的工具，而不再是原始社会的刀耕火种，一些落后的浏览器也会慢慢的淘汰，也会有层出不穷的新框架出来让人眼前一亮，很多中年人现在回想起刚刚改革开放的时候...`
-                },{
-                    topic:'Vue.js',
-                    image:'../../../static/images/admin.jpg',
-                    name:'admin',
-                    sign:'没有最好，只有更好！',
-                    title:'vue，react之类的框架是不是弱化了对前端人员js水平的要求？',
-                    like:15,
-                    content:`<p>现在是面向组件化、面向函数开发，vue和react给前端带来的是一种思考问题解决方案的新思维，经过大量的实践之后，这种思维已经获得了很大一部分人的认同。</p>
-                        <p>计算机世界也像人类世界一样，会有越来越强大的工具，而不再是原始社会的刀耕火种，一些落后的浏览器也会慢慢的淘汰，也会有层出不穷的新框架出来让人眼前一亮，很多中年人现在回想起刚刚改革开放的时候，后悔自己错过了去拼去闯的机会，现在前端界也类似刚刚出现变革的时候，框架化开发席卷了前端行业，错过这次变革的人肯定很多，他们守旧、固化思维模式和开发方式，不出几年，就很难在适应前端市场的需求。</p>
-                        <p>面对如此多的框架和库，我们无法做到精通所有，但是要做到接受新的知识、新的理念，不要做一个几年后被行业淘汰的人。</p>
-                        <p>总得来看，现在对前端人员的要求提高了，这种提高是指学习新知识的能力、还要要大局观意识，不再做一个普通的切图仔。
-                        </p>`,
-                    editDate:'昨天 10:17',
-                    comment:3,
-                    isCollapsed:true,
-                    CollapseContent:`<p>现在是面向组件化、面向函数开发，vue和react给前端带来的是一种思考问题解决方案的新思维，经过大量的实践之后，这种思维已经获得了很大一部分人的认同。</p>
-                        <p>计算机世界也像人类世界一样，会有越来越强大的工具，而不再是原始社会的刀耕火种，一些落后的浏览器也会慢慢的淘汰，也会有层出不穷的新框架出来让人眼前一亮，很多中年人现在回想起刚刚改革开放的时候...`
-                }]
+                ContentItems:[]
+                // ContentItems:[{
+                //     topic:'Vue.js',
+                //     image:'../../../static/images/admin.jpg',
+                //     name:'admin',
+                //     sign:'没有最好，只有更好！',
+                //     title:'vue，react之类的框架？',
+                //     like:15,
+                //     content:``,
+                //     editDate:'昨天 10:17',
+                //     comment:3,
+                //     isCollapsed:true,
+                //     CollapseContent:``
+                // }]
             }
         },
+        mounted(){
+            this.loadQuestionsList()
+        },
         methods:{
-            expandContent:function(index){
+            //加载所有的问题            
+            loadQuestionsList:function(){
+                this.$http.get('/server/questions/questions').then(
+                    function (res) {
+                          // 处理成功的结果
+                          if (res.data.success) {
+                            this.ContentItems=res.data.questions;
+                            return;
+                          }
+                          else{
+                            alert(res.data.error);
+                          }
+                    },function (res) {
+                      // 处理失败的结果
+                      alert(res.data);
+                    }
+                );
+            },
+            //内容的展开和折叠
+            expandContent:function(index){                
                 this.ContentItems[index].isCollapsed=false;
             },
             CollapseContent:function(index){
                 this.ContentItems[index].isCollapsed=true;
             },
+            //打开和关闭提问对话框
+            AskDialogOpen:function(){
+                this.AskDialogVisible = true;
+                this.$refs.askQuestionDialog.clearAskDialog();   
+
+            },
             closeAskModel:function(){
                 this.AskDialogVisible=false;
+            },
+            //添加话题
+            addTopic:function(item){
+                this.ContentItems.push(item);
             }
         }
     }

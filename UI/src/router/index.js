@@ -36,9 +36,9 @@ export default new Router({
       name: 'home',
       component: home,
       children:[{
-        path: '',
-        name: 'homeContent',
-        component: homeContent,
+          path: '',
+          name: 'homeContent',
+          component: homeContent,
           children:[{
             path: '',
             name: 'AskQuestionModel',
