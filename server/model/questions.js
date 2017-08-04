@@ -29,7 +29,9 @@ exports.create =function (document, res) {
       item['name']="匿名用户";
       item['sign']='';
       item['image']='../../../static/images/admin.jpg';
-    }        
+    } 
+    item['likeSelected']=false;
+    item['unlikeSelected']=false;         
     res.json({"success":true,"question":item});
  })
 };

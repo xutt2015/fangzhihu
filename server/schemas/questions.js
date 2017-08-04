@@ -38,7 +38,7 @@ QuestionsSchema.statics = {
  fetch: function(cb) { //查询所有数据
   return this
    .find()
-   .sort('meta.updateAt') //排序
+   .sort({'meta.updateAt':-1}) //-1降序，1升序
    .exec(cb) //回调
  },
  findById: function(id, cb) { //根据emailPhone查询单条数据
@@ -47,8 +47,17 @@ QuestionsSchema.statics = {
    .exec(cb)
  },
  insert:function(document,cb){
-  this.create(document);
-  cb();
+  this.create(document,cb);
+ },
+ updateLike:function(id,like,cb){
+   // var me=this;
+   // this.findOne({_id: id},function(err,question){
+   //    me.update({_id: id}, {$set : {like : question.like+1}}, cb)
+   // });  
+   this.update({_id: id}, {$set : {like : like}}, cb)
+ },
+ remove:function(id,cb){
+   this.findByIdAndRemove(id, cb)
  }
 }
  

@@ -43,17 +43,19 @@
                         <span>编辑于 {{item.editDate}}</span>
                     </div>
                     <div class="ContentItem-actions">
-                        <el-button type="info1" icon="caret-top">{{item.like}}</el-button>
-                        <el-button type="info1" icon="caret-bottom"></el-button>
+                        <el-button type="info1" icon="caret-top" @click='likeArtical(index,item._id)' :class='{selected:item.likeSelected}'>{{item.like}}</el-button>
+                        <el-button type="info1" icon="caret-bottom" @click='unlikeArtical(index,item._id)' :class='{selected:item.unlikeSelected}'></el-button>
                         <el-button type="info2" icon="edit">{{item.comment}}条评论</el-button>
                         <el-button type="info2" icon="share">分享</el-button>
                         <el-button type="info2" icon="star-on">收藏</el-button>
                         <el-button type="info2" icon="star-off">感谢</el-button>
-                        <el-dropdown trigger="click">
+                        <!-- (event,index,item._id) -->
+                        <el-dropdown trigger="click"  @command="selectTopic">
                             <el-button type="info2" icon="more"></el-button>
                               <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>没有帮助</el-dropdown-item>
-                                <el-dropdown-item>举报</el-dropdown-item>
+                                <el-dropdown-item :command="['deleteArt',index,item._id]">删除文章</el-dropdown-item>
+                                <el-dropdown-item :command="['noHelp',index,item._id]">没有帮助</el-dropdown-item>
+                                <el-dropdown-item :command="['report',index,item._id]">举报</el-dropdown-item>
                               </el-dropdown-menu>
                         </el-dropdown>
                         <el-button @click="CollapseContent(index)" v-show="!item.isCollapsed" type="info2" style="float:right">
@@ -155,7 +157,7 @@
                 // }]
             }
         },
-        mounted(){
+        mounted(){//渲染时加载
             this.loadQuestionsList()
         },
         methods:{
@@ -195,7 +197,86 @@
             },
             //添加话题
             addTopic:function(item){
-                this.ContentItems.push(item);
+                this.ContentItems.unshift(item);
+            },
+            //喜欢该文章
+            likeArtical:function(index,id,route){
+                let selected=this.ContentItems[index].likeSelected;
+                var _like;
+                if (selected) {
+                    _like=this.ContentItems[index].like-1;
+                }else{
+                    _like=this.ContentItems[index].like+1;
+                }  
+                var item={
+                    _id:id,
+                    like:_like
+                }
+                this.$http.post('server/questions/updateAtLike',item).then(
+                    function (res) {
+                          // 处理成功的结果
+                          if (res.data.success) {
+                            this.ContentItems[index].like=_like;
+                            this.ContentItems[index].likeSelected=!selected;
+                            if (route===undefined) {
+                                this.ContentItems[index].unlikeSelected=false;
+                            }
+                            return;
+                          }
+                          else{
+                            alert(res.data.error);
+                          }
+                    },function (res) {
+                      // 处理失败的结果
+                      alert(res.data);
+                    }
+                )              
+            },
+            unlikeArtical(index,id){
+                if(this.ContentItems[index].unlikeSelected){
+                    this.ContentItems[index].unlikeSelected=false;
+                }else{
+                    if (this.ContentItems[index].likeSelected) {
+                        this.likeArtical(index,id,'route');
+                    }
+                    this.ContentItems[index].unlikeSelected=true;
+                }
+                
+                
+            },
+            selectTopic(command){
+                debugger;
+                 switch(command[0]){
+                   case 'deleteArt':
+                       this.deleteArt(command[1],command[2]);
+                   break;
+                   case 'noHelp':
+                   break;
+                   case 'report':
+                   break;
+                 }
+            },
+            //删除文章
+            deleteArt(index,id){
+                var item={
+                    _id:id
+                }
+                this.$http.post('server/questions/delete',item).then(
+                    function (res) {
+                          // 处理成功的结果
+                          if (res.data.success) {
+                            this.ContentItems.splice(index,1);
+                            return;
+                          }
+                          else{
+                            alert(res.data.error);
+                          }
+                    },function (res) {
+                      // 处理失败的结果
+                      alert(res.data);
+                    }
+                ) 
+
             }
         }
     }
@@ -235,6 +316,10 @@
                     background-color: #ebf3fb;
                     border-color: #ebf3fb;
                     padding: 8px 10px;
+                }
+                .el-button--info1.selected{
+                    background-color: #2d84cc;
+                    color: white;
                 }
                 .el-button--info2{
                     color: #8590a6;
