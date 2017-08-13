@@ -40,39 +40,39 @@
                 var reg=/[\?？]+/;
                 if (!reg.test(value)) {
                   callback(new Error('你还没有给问题添加问号'));
-                } else {
+              } else {
                   callback();
-                }
-            };
-            return{
-                ruleForm:{
-                    question:""
-                },
-                topic:"",
-                topics:[{
-                    name:"前端开发"
-                },{
-                    name:"vue.js"
-                },{
-                    name:"node.js"
-                }],
-                filterTopics:[{
-                    name:"前端开发"
-                },{
-                    name:"vue.js"
-                },{
-                    name:"node.js"
-                }],
-                remark:"",
-                anonymous:false,
-                questionRules:{
-                    question:{ validator: questionRule, trigger: 'blur' }
-                }
+              }
+          };
+          return{
+            ruleForm:{
+                question:""
+            },
+            topic:"",
+            topics:[{
+                name:"前端开发"
+            },{
+                name:"vue.js"
+            },{
+                name:"node.js"
+            }],
+            filterTopics:[{
+                name:"前端开发"
+            },{
+                name:"vue.js"
+            },{
+                name:"node.js"
+            }],
+            remark:"",
+            anonymous:false,
+            questionRules:{
+                question:{ validator: questionRule, trigger: 'blur' }
             }
-        },
-        props:{
-          AskDialogVisible: {
-            type: Boolean
+        }
+    },
+    props:{
+        AskDialogVisible: {
+           type: Boolean
         }
     },
     comoputed:{
@@ -122,33 +122,33 @@
         //创建问题
         createQuestion:function(){
             var item={ title: this.ruleForm.question,
-                       topics: this.topic,
-                       content: this.remark,
-                       isAnonymous:this.anonymous,
-                       userId:this.$root.$children[0].userInfo.emailPhone
-                };
-            this.$http.post('/server/questions/insert',item).then(
-                function (res) {
+             topics: this.topic,
+             content: this.remark,
+             isAnonymous:this.anonymous,
+             userId:this.$root.$children[0].userInfo.emailPhone
+         };
+         this.$http.post('/server/questions/insert',item).then(
+            function (res) {
                       // 处理成功的结果
                       if (res.data.success) {
                         alert("问题提交成功！");
                         this.AskDialogClose();
                         this.addTopic(res.data.question);
                         return;
-                      }
-                      else{
+                    }
+                    else{
                         alert(res.data.error);
-                      }
+                    }
                 },function (res) {
                   // 处理失败的结果
                   alert(res.data);
-                }
-            );
-        }
-    }
+              }
+              );
+     }
+ }
 }
 </script>
-<style lang='scss'>
+<style lang='scss' scoped>
     .el-dialog{
         text-align: center;
         .title1{
@@ -174,6 +174,6 @@
         }
     }
     .el-dropdown-menu.askquestion{
-         width: calc(50% - 50px);
-    }
+       width: calc(50% - 50px);
+   }
 </style>

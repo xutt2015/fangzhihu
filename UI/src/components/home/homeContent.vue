@@ -3,90 +3,131 @@
         <div class='Topstory-mainColumn'>
             <div class="TopstoryHeader">
               <el-card class='TopstoryHeader'>
-                 <div class="askQuestion" @click='AskDialogOpen'>
-                     <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="Icon Icon--question" aria-hidden="true" style="height: 18px; width: 18px;"><title></title><g><g transform="translate(-3 -3)" fill="#8590A6" fill-rule="evenodd">     <path d="M3.833 6.356c0-1.66 1.334-3.007 2.993-3.007h9.348c1.653 0 2.993 1.338 2.993 3.006v8.498c0 1.66-1.266 3.467-2.812 4.03l-1.09.396c-2.08.757-5.447.76-7.53 0l-1.09-.396c-1.553-.565-2.812-2.363-2.812-4.03V6.356zm1.643.67v7.492c0 1.1.84 2.314 1.873 2.697l2.277.844c1.035.383 2.712.383 3.746 0l2.278-.845c1.036-.384 1.874-1.59 1.874-2.697V7.026c0-1.1-.897-2.003-2.003-2.003H7.48c-1.118 0-2.004.897-2.004 2.003z"></path>     <path d="M13.012 11.46l-.422.29c-.232.177-.433.53-.433.53s-.08.134-.11.398v.16h-1.63v-.24c.02-.555.11-.86.343-1.13.364-.422 1.168-.935 1.202-.956.114-.086.212-.184.284-.288.17-.23.244-.412.244-.59 0-.25-.074-.478-.22-.682-.143-.197-.41-.296-.798-.296-.385 0-.648.12-.806.368-.162.254-.243.523-.243.796l-.005.23-1.656-.003.003-.23c.043-1.007.406-1.732 1.078-2.155.424-.27 1.113-.396 1.657-.406.873.01 1.39.193 1.923.575.54.387.815.965.815 1.72 0 .422-.135.82-.4 1.18-.14.193-.442.434-.826.73z"></path>     <ellipse cx="11.226" cy="14.791" rx="1.095" ry="1.116"></ellipse>   </g></g></svg>
-                     提问
-                 </div>
-                 <div class="replay">
-                     <i class="el-icon-document"></i>
-                     回答
-                 </div>
-                 <div class="newArtical">
-                     <i class="el-icon-edit"></i>
-                     写文章
-                 </div>
-             </el-card>
-         </div>
-         <div class="TopstoryMain">
-            <el-card class="box-card" v-for="(item,index) in ContentItems">
-                <div class="Feed-title">
-                    来自话题:{{item.topic}}
-                </div>
-                <div class="AuthorInfo">
-                    <img :src="item.image" style="width24px;height:24px;">
-                    <span class="name">{{item.name}}</span>
-                    <span class="sign">{{item.sign}}</span>
-                </div>
-                <div class="ContentItem">
-                    <h3 class="ContentItem-title"><a target="_blank" href="">{{item.title}}</a></h3>
-                    <div class="content" @click="expandContent(index)" :class="{isCollapsed:item.isCollapsed}"> 
-                        <span v-show="!item.isCollapsed">{{item.like}}人赞同了该回答</span>
-                        <div class="artical">
-                            <div>
+               <div class="askQuestion" @click='AskDialogOpen'>
+                   <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="Icon Icon--question" aria-hidden="true" style="height: 18px; width: 18px;"><title></title><g><g transform="translate(-3 -3)" fill="#8590A6" fill-rule="evenodd">     <path d="M3.833 6.356c0-1.66 1.334-3.007 2.993-3.007h9.348c1.653 0 2.993 1.338 2.993 3.006v8.498c0 1.66-1.266 3.467-2.812 4.03l-1.09.396c-2.08.757-5.447.76-7.53 0l-1.09-.396c-1.553-.565-2.812-2.363-2.812-4.03V6.356zm1.643.67v7.492c0 1.1.84 2.314 1.873 2.697l2.277.844c1.035.383 2.712.383 3.746 0l2.278-.845c1.036-.384 1.874-1.59 1.874-2.697V7.026c0-1.1-.897-2.003-2.003-2.003H7.48c-1.118 0-2.004.897-2.004 2.003z"></path>     <path d="M13.012 11.46l-.422.29c-.232.177-.433.53-.433.53s-.08.134-.11.398v.16h-1.63v-.24c.02-.555.11-.86.343-1.13.364-.422 1.168-.935 1.202-.956.114-.086.212-.184.284-.288.17-.23.244-.412.244-.59 0-.25-.074-.478-.22-.682-.143-.197-.41-.296-.798-.296-.385 0-.648.12-.806.368-.162.254-.243.523-.243.796l-.005.23-1.656-.003.003-.23c.043-1.007.406-1.732 1.078-2.155.424-.27 1.113-.396 1.657-.406.873.01 1.39.193 1.923.575.54.387.815.965.815 1.72 0 .422-.135.82-.4 1.18-.14.193-.442.434-.826.73z"></path>     <ellipse cx="11.226" cy="14.791" rx="1.095" ry="1.116"></ellipse>   </g></g></svg>
+                   提问
+               </div>
+               <div class="replay">
+                   <i class="el-icon-document"></i>
+                   回答
+               </div>
+               <div class="newArtical">
+                   <i class="el-icon-edit"></i>
+                   写文章
+               </div>
+           </el-card>
+       </div>
+       <div class="TopstoryMain">
+        <el-card class="box-card" v-for="(item,index) in ContentItems">
+            <div class="Feed-title">
+                来自话题:{{item.topic}}
+            </div>
+            <div class="AuthorInfo">
+                <img :src="item.image" style="width24px;height:24px;">
+                <span class="name">{{item.name}}</span>
+                <span class="sign">{{item.sign}}</span>
+            </div>
+            <div class="ContentItem">
+                <h3 class="ContentItem-title"><a target="_blank" href="">{{item.title}}</a></h3>
+                <div class="content" @click="expandContent(index)" :class="{isCollapsed:item.isCollapsed}"> 
+                    <span v-show="!item.isCollapsed">{{item.like}}人赞同了该回答</span>
+                    <div class="artical">
+                        <div>
                             <p v-html="item.isCollapsed?item.CollapseContent:item.content"></p>
-                            </div>
-                            <el-button v-show="item.isCollapsed" type="info2" style="position: absolute; margin-top: -40px;margin-left: 230px;"> 
-                                <i class="el-icon-arrow-down" style="float:right;margin-left:5px;"></i>
-                                阅读全文
-                            </el-button>
                         </div>
-                        <span>编辑于 {{item.editDate}}</span>
+                        <el-button v-show="item.isCollapsed" type="info2" style="position: absolute; margin-top: -40px;margin-left: 230px;"> 
+                            <i class="el-icon-arrow-down" style="float:right;margin-left:5px;"></i>
+                            阅读全文
+                        </el-button>
                     </div>
-                    <div class="ContentItem-actions">
-                        <el-button type="info1" icon="caret-top" @click='likeArtical(index,item._id)' :class='{selected:item.likeSelected}'>{{item.like}}</el-button>
-                        <el-button type="info1" icon="caret-bottom" @click='unlikeArtical(index,item._id)' :class='{selected:item.unlikeSelected}'></el-button>
-                        <el-button type="info2" icon="edit">{{item.comment}}条评论</el-button>
-                        <el-button type="info2" icon="share">分享</el-button>
-                        <el-button type="info2" icon="star-on">收藏</el-button>
-                        <el-button type="info2" icon="star-off">感谢</el-button>
-                        <!-- (event,index,item._id) -->
-                        <el-dropdown trigger="click"  @command="selectTopic">
-                            <el-button type="info2" icon="more"></el-button>
-                              <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item :command="['deleteArt',index,item._id]">删除文章</el-dropdown-item>
-                                <el-dropdown-item :command="['noHelp',index,item._id]">没有帮助</el-dropdown-item>
-                                <el-dropdown-item :command="['report',index,item._id]">举报</el-dropdown-item>
-                              </el-dropdown-menu>
-                        </el-dropdown>
-                        <el-button @click="CollapseContent(index)" v-show="!item.isCollapsed" type="info2" style="float:right">
-                                <i class="el-icon-arrow-up" style="float:right;margin-left: 5px;"></i>
-                                收起
-                            </el-button>
-                    </div>
+                    <span>编辑于 {{item.editDate}}</span>
                 </div>
-            </el-card>
-        </div>
-    </div>
-    <div class="TopstorySideBar">
-        <el-card class="box-card">
-            <ul class="TopstorySideBar-categoryList">
-                <li v-for="(item,index) in categoryList" :style="{color:item.color}">
-                    <i :class="item.icon"></i>
-                    <span>{{item.name}}</span>
-                </li>
-            </ul>
-        </el-card>
-        <el-card>
-            <ul class="TopstorySideBar-navList">
-                <li v-for="(item,index) in navList">
-                    <i :class="item.icon"></i>
-                    {{item.name}}
-                    <span v-show="item.num" class="TopstorySideBar-navNumber">{{item.num}}</span>
-                </li>
-            </ul>
-        </el-card>
-    </div>
-    <router-view :AskDialogVisible=AskDialogVisible @closeAskModel='closeAskModel' @addTopic='addTopic' ref='askQuestionDialog'></router-view>
+                <div class="ContentItem-actions">
+                    <el-button type="info1" icon="caret-top" @click='likeArtical(index,item._id)' :class='{selected:item.likeSelected}'>{{item.like}}</el-button>
+                    <el-button type="info1" icon="caret-bottom" @click='unlikeArtical(index,item._id)' :class='{selected:item.unlikeSelected}'></el-button>
+                    <el-button type="info2" icon="edit" @click="expandComment(item.comment,index,item._id)">
+                        <span v-show='!item.expand'>{{item.comment}}条评论</span>
+                        <span v-show='item.expand'>收起评论</span>
+                    </el-button>
+                    <el-button type="info2" icon="share">分享</el-button>
+                    <el-button type="info2" icon="star-on">收藏</el-button>
+                    <el-button type="info2" icon="star-off">感谢</el-button>
+                    <!-- (event,index,item._id) -->
+                    <el-dropdown trigger="click"  @command="selectTopic">
+                        <el-button type="info2" icon="more"></el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item :command="['deleteArt',index,item._id]">删除文章</el-dropdown-item>
+                            <el-dropdown-item :command="['noHelp',index,item._id]">没有帮助</el-dropdown-item>
+                            <el-dropdown-item :command="['report',index,item._id]">举报</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-button @click="CollapseContent(index)" v-show="!item.isCollapsed" type="info2" style="float:right">
+                        <i class="el-icon-arrow-up" style="float:right;margin-left: 5px;"></i>
+                        收起
+                    </el-button>
+                </div>
+            </div>
+            <div class='comment' v-show='item.expand'>
+                <div>
+                    <h4>{{item.comment}}条评论</h4>
+                </div>
+                <div class="commentItems">
+                    <div v-for="(comment,commentIndex) in item.comments">
+                        <div class="AuthorInfo">
+                            <img :src="comment.userImage" style="width24px;height:24px;">
+                            <span class="name">{{comment.userName}}
+                                <span v-show='comment.RootID'>回复</span>
+                                {{comment.PName}}
+                            </span>
+                            <span class="CommentTime">{{comment.createAt}}</span>
+                        </div>
+                        <p>{{comment.content}}</p>
+                        <div v-if="!comment.expand">
+                            <el-button type="info2" icon="star-on">赞</el-button>
+                            <el-button type="info2" icon="document" v-show='comment.RootID' @click='openDialogWin(comment.RootID)'>查看对话</el-button>
+                            <el-button type="info2" @click='comment.expand=true' class="hoverBtn" icon="edit">回复</el-button>
+                            <el-button type="info2" class="hoverBtn" icon="star-off">踩</el-button>
+                        </div>
+                        <div class="replayDiv" :id='comment._id' v-else>
+                            <el-input placeholder="回复">
+                            </el-input>
+                            <div style="float:right;">
+                                <el-button type="info2" @click='comment.expand=false'>取消</el-button>
+                                <el-button type="primary" @click='replay(item._id,index,comment._id,comment.RootID,comment.userName)'>评论</el-button>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+                <div class="SearchBar" :id='item._id' :index='index'>
+                  <el-input class='search' @focus='SearchBarMax' @blur='SearchBarMin' placeholder="写下你的评论...">
+                  </el-input>
+                  <el-button type="primary" class='SearchBTn'>评论</el-button>
+              </div>
+          </div>
+      </el-card>
+  </div>
+</div>
+<div class="TopstorySideBar">
+    <el-card class="box-card">
+        <ul class="TopstorySideBar-categoryList">
+            <li v-for="(item,index) in categoryList" :style="{color:item.color}">
+                <i :class="item.icon"></i>
+                <span>{{item.name}}</span>
+            </li>
+        </ul>
+    </el-card>
+    <el-card>
+        <ul class="TopstorySideBar-navList">
+            <li v-for="(item,index) in navList">
+                <i :class="item.icon"></i>
+                {{item.name}}
+                <span v-show="item.num" class="TopstorySideBar-navNumber">{{item.num}}</span>
+            </li>
+        </ul>
+    </el-card>
+</div>
+<router-view :AskDialogVisible=AskDialogVisible @closeAskModel='closeAskModel' @addTopic='addTopic' ref='askQuestionDialog' name="askQuestion"></router-view>
+<router-view :dialogWinVisible=dialogWinVisible :RootID=RootID @closeDialogWin='dialogWinVisible=false' name="dialogWin"></router-view>
 </div>
 </template>
 <script>
@@ -94,7 +135,9 @@
         name:'homeContent',
         data(){
             return {
-                AskDialogVisible:false,
+                AskDialogVisible:false,//问题窗口
+                dialogWinVisible:false,//对话窗口
+                RootID:0,//对话窗口RootID
                 navList:[{
                     name:"我的收藏",
                     icon:"el-icon-star-on",
@@ -152,6 +195,7 @@
                 //     content:``,
                 //     editDate:'昨天 10:17',
                 //     comment:3,
+                //     comments:[],
                 //     isCollapsed:true,
                 //     CollapseContent:``
                 // }]
@@ -169,14 +213,14 @@
                           if (res.data.success) {
                             this.ContentItems=res.data.questions;
                             return;
-                          }
-                          else{
+                        }
+                        else{
                             alert(res.data.error);
-                          }
+                        }
                     },function (res) {
                       // 处理失败的结果
                       alert(res.data);
-                    }
+                  }
                 );
             },
             //内容的展开和折叠
@@ -190,7 +234,6 @@
             AskDialogOpen:function(){
                 this.AskDialogVisible = true;
                 this.$refs.askQuestionDialog.clearAskDialog();   
-
             },
             closeAskModel:function(){
                 this.AskDialogVisible=false;
@@ -222,15 +265,15 @@
                                 this.ContentItems[index].unlikeSelected=false;
                             }
                             return;
-                          }
-                          else{
+                        }
+                        else{
                             alert(res.data.error);
-                          }
+                        }
                     },function (res) {
                       // 处理失败的结果
                       alert(res.data);
-                    }
-                )              
+                  }
+                  )              
             },
             unlikeArtical(index,id){
                 if(this.ContentItems[index].unlikeSelected){
@@ -240,21 +283,20 @@
                         this.likeArtical(index,id,'route');
                     }
                     this.ContentItems[index].unlikeSelected=true;
-                }
-                
+                }           
                 
             },
             selectTopic(command){
                 debugger;
-                 switch(command[0]){
-                   case 'deleteArt':
-                       this.deleteArt(command[1],command[2]);
-                   break;
-                   case 'noHelp':
-                   break;
-                   case 'report':
-                   break;
-                 }
+                switch(command[0]){
+                 case 'deleteArt':
+                 this.deleteArt(command[1],command[2]);
+                 break;
+                 case 'noHelp':
+                 break;
+                 case 'report':
+                 break;
+                }
             },
             //删除文章
             deleteArt(index,id){
@@ -267,20 +309,141 @@
                           if (res.data.success) {
                             this.ContentItems.splice(index,1);
                             return;
-                          }
-                          else{
+                        }
+                        else{
                             alert(res.data.error);
-                          }
+                        }
                     },function (res) {
                       // 处理失败的结果
                       alert(res.data);
-                    }
-                ) 
-
+                  }
+                  ) 
+            },            
+            //评论按钮组
+            SearchBarMax(e){
+                var searchBar=e.target.parentElement.parentElement;
+                searchBar.classList.add('isFocus');
+            },
+            SearchBarMin(e){
+                var searchBar=e.target.parentElement.parentElement;
+                if (e.relatedTarget&&e.relatedTarget.classList.contains('SearchBTn')) { 
+                    this.addComment(searchBar.id,searchBar.attributes['index'].value,e.target.value);
+                }
+                searchBar.classList.remove('isFocus');
+            },
+            //发表评论
+            addComment(_id,index,content){
+                if (content.trim()==='') {
+                    alert("评论失败,不能为空！");
+                    return;
+                }
+                var item={
+                    questionID: _id,
+                    emailPhone: this.$root.$children[0].userInfo.emailPhone,
+                    content: content,
+                };
+                this.$http.post('/server/comments/insert',item).then(
+                    function (res) {
+                        // 处理成功的结果
+                        if (res.data.success) {
+                            alert("评论成功！");
+                            // 添加一条评论
+                            this.ContentItems[index].comment++;
+                            var obj={};
+                            obj["_id"]=res.data.id;
+                            obj["userImage"]=this.$root.$children[0].userInfo.image;
+                            obj["userName"]=this.$root.$children[0].userInfo.name;
+                            obj["content"]=content;
+                            obj["like"]=0;
+                            obj["dislike"]=0;
+                            obj["createAt"]="刚刚";
+                            obj["RootID"]="";
+                            obj["PName"]="";
+                            obj["expand"]=false;
+                            this.ContentItems[index].comments.push(obj);
+                            return;
+                        }
+                        else{
+                            alert("评论失败，"+res.data.error);
+                        }
+                    },function (res) {
+                      // 处理失败的结果
+                      alert(res.data);
+                  }
+                );
+            },
+            //展开评论
+            expandComment(comment,index,id){
+                var expand=this.ContentItems[index].expand;
+                this.ContentItems[index].expand=!expand;
+                if (comment&&!expand) {
+                    this.$http.get('/server/comments/comments?q='+id).then(
+                        function (res) {
+                            // 处理成功的结果
+                            if (res.data.success) {
+                                this.ContentItems[index].comments=res.data.comments;
+                                return;
+                            }
+                            else{
+                                alert("展开评论失败，"+res.data.error);
+                            }
+                        },function (res) {
+                          // 处理失败的结果
+                          alert(res.data);
+                  });
+                }
+            },
+            //回复
+            replay:function(Qid,index,PID,RootID,PName,content){
+                var content=document.getElementById(PID).getElementsByTagName("input")[0].value;
+                if (content.trim()==='') {
+                    return;
+                }
+                RootID=RootID===''?PID:RootID;
+                let item={
+                    questionID: Qid,
+                    emailPhone: this.$root.$children[0].userInfo.emailPhone,
+                    content: content,
+                    PID:PID,
+                    RootID:RootID
+                };
+                this.$http.post('/server/comments/replayInsert',item).then(
+                    function (res) {
+                        // 处理成功的结果
+                        if (res.data.success) {
+                            alert("评论成功！");
+                            // 添加一条评论
+                            var obj={};
+                            obj["_id"]=res.data.id;
+                            obj["userImage"]=this.$root.$children[0].userInfo.image;
+                            obj["userName"]=this.$root.$children[0].userInfo.name;
+                            obj["content"]=content;
+                            obj["like"]=0;
+                            obj["dislike"]=0;
+                            obj["createAt"]="刚刚";
+                            obj["RootID"]=RootID;
+                            obj["PName"]=PName;
+                            obj["expand"]=false;
+                            this.ContentItems[index].comments.push(obj);
+                            return;
+                        }
+                        else{
+                            alert("评论失败，"+res.data.error);
+                        }
+                    },function (res) {
+                      // 处理失败的结果
+                      alert(res.data);
+                });
+            },
+            // 打开会话窗口
+            openDialogWin:function(RootID){
+                this.RootID=RootID;
+                this.dialogWinVisible=true;
             }
         }
     }
 </script>
+<!-- scoped限制作用域 -->
 <style lang="scss">
     .homeContent{
         margin-top: 70px;
@@ -331,7 +494,7 @@
                 .Feed-title{
                     color: #8590a6;
                     font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Noto Sans CJK SC,WenQuanYi Micro Hei,Arial,sans-serif;
-                        line-height: 1;
+                    line-height: 1;
                 }
                 .AuthorInfo{
                     margin: 10px 0px;
@@ -376,6 +539,83 @@
                 }
                 .ContentItem-actions{
                     margin-top: 15px;
+                }
+            }
+        }
+        .comment{
+            border: 1px solid #eee;
+            margin-top: 10px;
+            // padding: 10px;
+            border-radius: 4px;
+            .CommentTime{
+                vertical-align: super;
+                float: right;
+                color: #8590a6;
+            }
+            >div+div{
+                border-top: 1px solid #eee;
+                padding: 10px;
+            }
+            >div:nth-child(1){
+                padding-left: 10px;
+            }
+             // SearchBar样式
+             .SearchBar{
+                position: relative;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                .search{
+                    width: 100%;
+                    transition: all .2s;
+                }
+                input{
+                    background-color: #f7f8fa;
+                    // border-color: #bfcbd9;
+                }
+                button{
+                    position: absolute;
+                    right: 10px;
+                    transform: scale(0);
+                    z-index: -1;
+                    // opacity: 0.7;                    
+                    transition: all 0.2s 0.1s;
+                }
+            }
+            .SearchBar.isFocus {
+                .search{
+                    width: calc(100% - 70px);                  
+                }
+                .search i{
+                    color: #20a0ff;
+                }
+                input{
+                    background-color: #fff;
+                    border-color: #aaa;
+                }
+                button{
+                    transform: scale(1);
+                    z-index: 0;
+                }
+            }
+            .commentItems{
+                div+div{
+                    border-top: 1px solid #eee;
+                }
+                div{
+                    .hoverBtn{
+                        display: none;
+                    }
+                }
+                div:hover{
+                    .hoverBtn{
+                        display: inline-block;
+                    }
+                }
+                .replayDiv{
+                    overflow:hidden;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
                 }
             }
         }

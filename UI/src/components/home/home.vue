@@ -25,7 +25,7 @@
       </div>
       <el-dropdown trigger="click">
           <div style="display:flex;align-items:center;cursor: pointer;">
-            <img width="30" height="30" src="https://pic1.zhimg.com/da8e974dc_is.jpg">
+            <img width="30" height="30" :src="userImage">
             <span class="userName">{{userName}}</span>
           </div>
           <el-dropdown-menu slot="dropdown" style="margin-top:15px;">
@@ -80,6 +80,9 @@
         else{
           return this._props.userInfo.name;
         }
+      },
+      userImage:function(){
+        return this._props.userInfo.image;
       }
     }
   }

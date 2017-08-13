@@ -27,6 +27,8 @@ router.get('/questions', function(req, res, next) {
         item['topic']=questions[i].topics[0];
         item['like']=questions[i].like;
         item['comment']=questions[i].comment;
+        item['comments']=[];
+        item['expand']=false;//评论是否展开        
         item['content']=questions[i].content;
         item['editDate']=questions[i].meta.updateAt.toLocaleString();
         item['isCollapsed']=true;

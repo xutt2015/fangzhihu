@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var questions = require('./routes/questions');
+var comments= require('./routes/comments');
 
 var mongoose = require('mongoose');
 // //测试数据是否连接上
@@ -38,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/questions', questions);
+app.use('/comments', comments);
 
 
 // catch 404 and forward to error handler

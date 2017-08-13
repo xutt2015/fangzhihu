@@ -20,36 +20,40 @@ router.get('/users', function(req, res, next) {
  })
 });
 
-//查询所有用户数据
-router.get('/user', function(req, res, next) {
- //"2017-07-30T08:17:12.549Z".slice(0,19).replace('T',' ')
- Users.findById('1940796332@qq.com',function(err, users) {
-  if(err) {
-   console.log(err);
-  }  
-  res.json({"users":users});
- })
-});
-
 //按emailPhone查询用户信息是否正确
-// http://localhost:3000/users/user?ep=1940796332@qq.com&pw=888888
+// http://localhost:3000/users/user?ep=1940796332@qq.com
 router.post('/user', function(req, res, next) {
  var emailPhone=req.body.ep;
  var password=req.body.pw;
- Users.fetch(function(err, users) {
+ // var emailPhone=req.params.ep;
+ // var password=req.params.pw;
+ Users.findById(emailPhone,function(err, user) {
   if(err) {
    console.log(err);
   }  
-  for (var user of users) {
-    if (user.emailPhone===emailPhone&&user.password===password) {
-      res.send({"success":true,"userInfo":{"name":user.name,
-        "emailPhone":user.emailPhone,
-        "password":user.password}})
-      return;
-    }
+  if (user&&user.password===password) {
+    res.send({"success":true,"userInfo":{"name":user.name,
+      "emailPhone":user.emailPhone,
+      "password":user.password,
+      "image":"../../../static/images/admin.jpg"}})
+    return;
   }
   res.send({"success":false,"error":"用户名密码有误，请重新登录"})
- })
+ });
+ // Users.fetch(function(err, users) {
+ //  if(err) {
+ //   console.log(err);
+ //  }  
+ //  for (var user of users) {
+ //    if (user.emailPhone===emailPhone&&user.password===password) {
+ //      res.send({"success":true,"userInfo":{"name":user.name,
+ //        "emailPhone":user.emailPhone,
+ //        "password":user.password}})
+ //      return;
+ //    }
+ //  }
+ //  res.send({"success":false,"error":"用户名密码有误，请重新登录"})
+ // })
 });
 
 //插入用户数据
@@ -72,6 +76,10 @@ router.post('/insert', function(req, res, next) {
     for (var user of users) {
       if (user.emailPhone===emailPhone) {
         res.send({"success":false,"error":"该邮箱或手机号已经注册！"})
+        return;
+      }
+      else if (user.name===name) {
+        res.send({"success":false,"error":"该用户名已经注册！"})
         return;
       }
     }

@@ -5,6 +5,7 @@ import login from '@/components/login/login'
 import home from '@/components/home/home'
 import homeContent from '@/components/home/homeContent'
 import AskQuestionModel from '@/components/home/AskQuestionModel'
+import dialogWinModel from '@/components/home/dialogWin'
 
 Vue.use(Router)
 
@@ -41,10 +42,16 @@ export default new Router({
           component: homeContent,
           children:[{
             path: '',
-            name: 'AskQuestionModel',
-            component: AskQuestionModel
+            components: {
+              askQuestion:AskQuestionModel,
+              dialogWin:dialogWinModel
+            }
           }]
       }]
+    },{
+      path: '/dialogWin',
+      name: 'dialogWin',
+      component: dialogWinModel
     }
   ]
 })

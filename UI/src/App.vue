@@ -19,7 +19,8 @@ export default {
       userInfo:{
         name:'',
         emailPhone:'',
-        password:''
+        password:'',
+        image:''
       }
     }
   },

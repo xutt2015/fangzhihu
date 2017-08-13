@@ -17,6 +17,7 @@ exports.create =function (document, res) {
     item['topic']=questions.topics[0];
     item['like']=questions.like;
     item['comment']=questions.comment;
+    item['comments']=[];
     item['content']=questions.content;
     item['editDate']=questions.meta.updateAt.toLocaleString();
     item['isCollapsed']=true;

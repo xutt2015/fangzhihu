@@ -47,7 +47,15 @@ UsersSchema.statics = {
   this.create(document);
   cb();
   // return UsersSchema.save();
- }
+ },
+ findByIdMuch: function(emailPhone,PEmailPhone,cb) { //根据emailPhone查询多条数据
+  return this
+   .find({$or:[
+      {emailPhone: emailPhone},
+      {emailPhone: PEmailPhone}
+    ]})   
+   .exec(cb)
+ },
 }
  
 //暴露出去的方法

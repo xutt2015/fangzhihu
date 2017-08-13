@@ -118,7 +118,7 @@
         }
     }
 </script>
-<style type="text/css">
+<style type="text/css" scoped>
     .login{
         margin-top: 60px;
     }
