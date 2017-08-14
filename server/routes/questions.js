@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');//导入mongoose模块
 var {create,Questions} = require('../model/questions');//导入模型数据模块
 var Users = require('../model/users');//导入用户模块
+var Comments = require('../model/comments');//导入评论模块
 
 /* GET questions listing. */
 router.get('/', function(req, res, next) {
@@ -71,7 +72,12 @@ router.post('/delete', function(req, res, next) {
     if(err) {
       res.json({"success":false,"error":err});
     } 
-    res.json({"success":true});
+    Comments.removeByQuestion(id,function(err){
+      if(err) {
+        res.json({"success":false,"error":err});
+      } 
+      res.json({"success":true});
+    })
   })
 });
 

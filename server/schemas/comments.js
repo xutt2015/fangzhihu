@@ -60,8 +60,14 @@ CommentSchema.statics = {
  updateDisLike:function(id,dislike,cb){
    this.update({_id: id}, {$set : {dislike : dislike}}, cb)
  },
- remove:function(id,cb){
-   this.findByIdAndRemove(id, cb)
+ removeByQuestion:function(id,cb){//删除文章时全部删除
+   this.remove({questionID: id}, cb)
+ },
+ removeComments:function(RootID,cb){//删除评论及其下面的评论
+   this.remove({$or: [
+        {_id:RootID},
+        {RootID:RootID}
+    ]}, cb)
  }
 }
  

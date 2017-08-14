@@ -56,7 +56,7 @@
                     <el-dropdown trigger="click"  @command="selectTopic">
                         <el-button type="info2" icon="more"></el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="['deleteArt',index,item._id]">删除文章</el-dropdown-item>
+                            <el-dropdown-item :command="['deleteArt',index,item._id]" v-show="item.name===userInfo.name">删除文章</el-dropdown-item>
                             <el-dropdown-item :command="['noHelp',index,item._id]">没有帮助</el-dropdown-item>
                             <el-dropdown-item :command="['report',index,item._id]">举报</el-dropdown-item>
                         </el-dropdown-menu>
@@ -82,18 +82,19 @@
                             <span class="CommentTime">{{comment.createAt}}</span>
                         </div>
                         <p>{{comment.content}}</p>
-                        <div v-if="!comment.expand">
-                            <el-button type="info2" icon="star-on">赞</el-button>
+                        <div v-if="!comment.expand" class="buttons">
+                            <el-button type="info2" icon="star-on" @click="likeComment(index,commentIndex,comment._id)" :class="{selected:comment.likeSelected}">{{comment.like?comment.like:"赞"}}</el-button>   
                             <el-button type="info2" icon="document" v-show='comment.RootID' @click='openDialogWin(comment.RootID)'>查看对话</el-button>
-                            <el-button type="info2" @click='comment.expand=true' class="hoverBtn" icon="edit">回复</el-button>
-                            <el-button type="info2" class="hoverBtn" icon="star-off">踩</el-button>
+                            <el-button type="info2" @click='comment.expand=true' class="hoverBtn" icon="edit">回复</el-button>                   
+                            <el-button type="info2" class="hoverBtn" icon="star-off" @click="dislikeComment(index,commentIndex,comment._id)" :class="[{selected:comment.unlikeSelected}]">{{comment.unlikeSelected?"取消踩":"踩"}}</el-button>
+                            <el-button type="info2" class="hoverBtn" icon="delete" @click="deleteComment(index,commentIndex,comment._id,item._id)" v-show="comment.userName===userInfo.name&&!comment.RootID">删除</el-button>
                         </div>
                         <div class="replayDiv" :id='comment._id' v-else>
                             <el-input placeholder="回复">
                             </el-input>
                             <div style="float:right;">
                                 <el-button type="info2" @click='comment.expand=false'>取消</el-button>
-                                <el-button type="primary" @click='replay(item._id,index,comment._id,comment.RootID,comment.userName)'>评论</el-button>
+                                <el-button type="primary" @click='replay(item._id,index,commentIndex,comment._id,comment.RootID,comment.userName)'>评论</el-button>
                             </div>
                         </div>
                     </div>            
@@ -127,7 +128,7 @@
     </el-card>
 </div>
 <router-view :AskDialogVisible=AskDialogVisible @closeAskModel='closeAskModel' @addTopic='addTopic' ref='askQuestionDialog' name="askQuestion"></router-view>
-<router-view :dialogWinVisible=dialogWinVisible :RootID=RootID @closeDialogWin='dialogWinVisible=false' name="dialogWin"></router-view>
+<router-view :RootID="RootID"  :dialogWinVisible="dialogWinVisible" @closeDialogWin='dialogWinVisible=false' name="dialogWin"></router-view>
 </div>
 </template>
 <script>
@@ -137,7 +138,7 @@
             return {
                 AskDialogVisible:false,//问题窗口
                 dialogWinVisible:false,//对话窗口
-                RootID:0,//对话窗口RootID
+                RootID:"",//对话窗口RootID
                 navList:[{
                     name:"我的收藏",
                     icon:"el-icon-star-on",
@@ -199,6 +200,11 @@
                 //     isCollapsed:true,
                 //     CollapseContent:``
                 // }]
+            }
+        },
+        computed:{
+            userInfo:function(){
+                return this.$root.$children[0].userInfo;
             }
         },
         mounted(){//渲染时加载
@@ -284,7 +290,6 @@
                     }
                     this.ContentItems[index].unlikeSelected=true;
                 }           
-                
             },
             selectTopic(command){
                 debugger;
@@ -303,21 +308,35 @@
                 var item={
                     _id:id
                 }
-                this.$http.post('server/questions/delete',item).then(
-                    function (res) {
-                          // 处理成功的结果
-                          if (res.data.success) {
-                            this.ContentItems.splice(index,1);
-                            return;
-                        }
-                        else{
-                            alert(res.data.error);
-                        }
-                    },function (res) {
-                      // 处理失败的结果
-                      alert(res.data);
-                  }
-                  ) 
+                this.$confirm('此操作将永久删除文章及文章下的评论, 是否继续?', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      type: 'warning'
+                    }).then(() => {
+                      this.$http.post('server/questions/delete',item).then(
+                        function (res) {
+                              // 处理成功的结果
+                              if (res.data.success) {
+                                this.ContentItems.splice(index,1);
+                                this.$message({
+                                    message: '文章删除成功！',
+                                    type: 'success'
+                                });
+                                return;
+                            }
+                            else{
+                                this.$message.error(res.data);
+                            }
+                        },function (res) {
+                          // 处理失败的结果
+                          this.$message.error(res.data);
+                      })                       
+                    }).catch(() => {
+                      this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                      });          
+                });              
             },            
             //评论按钮组
             SearchBarMax(e){
@@ -339,7 +358,7 @@
                 }
                 var item={
                     questionID: _id,
-                    emailPhone: this.$root.$children[0].userInfo.emailPhone,
+                    emailPhone: this.userInfo.emailPhone,
                     content: content,
                 };
                 this.$http.post('/server/comments/insert',item).then(
@@ -351,8 +370,8 @@
                             this.ContentItems[index].comment++;
                             var obj={};
                             obj["_id"]=res.data.id;
-                            obj["userImage"]=this.$root.$children[0].userInfo.image;
-                            obj["userName"]=this.$root.$children[0].userInfo.name;
+                            obj["userImage"]=this.userInfo.image;
+                            obj["userName"]=this.userInfo.name;
                             obj["content"]=content;
                             obj["like"]=0;
                             obj["dislike"]=0;
@@ -360,6 +379,8 @@
                             obj["RootID"]="";
                             obj["PName"]="";
                             obj["expand"]=false;
+                            obj['likeSelected']=false;
+                            obj['unlikeSelected']=false;   
                             this.ContentItems[index].comments.push(obj);
                             return;
                         }
@@ -377,10 +398,18 @@
                 var expand=this.ContentItems[index].expand;
                 this.ContentItems[index].expand=!expand;
                 if (comment&&!expand) {
-                    this.$http.get('/server/comments/comments?q='+id).then(
+                    this.loadComments(index,id);
+                }
+            },
+            //加载评论
+            loadComments:function(index,id){
+                debugger
+                this.$http.get('/server/comments/comments?q='+id).then(
                         function (res) {
+                            debugger
                             // 处理成功的结果
                             if (res.data.success) {
+                                debugger
                                 this.ContentItems[index].comments=res.data.comments;
                                 return;
                             }
@@ -388,13 +417,13 @@
                                 alert("展开评论失败，"+res.data.error);
                             }
                         },function (res) {
+                            debugger
                           // 处理失败的结果
                           alert(res.data);
                   });
-                }
             },
             //回复
-            replay:function(Qid,index,PID,RootID,PName,content){
+            replay:function(Qid,index,commentIndex,PID,RootID,PName,content){
                 var content=document.getElementById(PID).getElementsByTagName("input")[0].value;
                 if (content.trim()==='') {
                     return;
@@ -402,7 +431,7 @@
                 RootID=RootID===''?PID:RootID;
                 let item={
                     questionID: Qid,
-                    emailPhone: this.$root.$children[0].userInfo.emailPhone,
+                    emailPhone: this.userInfo.emailPhone,
                     content: content,
                     PID:PID,
                     RootID:RootID
@@ -411,12 +440,14 @@
                     function (res) {
                         // 处理成功的结果
                         if (res.data.success) {
-                            alert("评论成功！");
+                            alert("回复成功！");
+                            debugger
+                            this.ContentItems[index].comments[commentIndex].expand=false;
                             // 添加一条评论
                             var obj={};
                             obj["_id"]=res.data.id;
-                            obj["userImage"]=this.$root.$children[0].userInfo.image;
-                            obj["userName"]=this.$root.$children[0].userInfo.name;
+                            obj["userImage"]=this.userInfo.image;
+                            obj["userName"]=this.userInfo.name;
                             obj["content"]=content;
                             obj["like"]=0;
                             obj["dislike"]=0;
@@ -424,6 +455,8 @@
                             obj["RootID"]=RootID;
                             obj["PName"]=PName;
                             obj["expand"]=false;
+                            obj['likeSelected']=false;
+                            obj['unlikeSelected']=false;   
                             this.ContentItems[index].comments.push(obj);
                             return;
                         }
@@ -439,6 +472,86 @@
             openDialogWin:function(RootID){
                 this.RootID=RootID;
                 this.dialogWinVisible=true;
+            },
+            //踩
+            dislikeComment:function(index,commentIndex,id){
+                if(this.ContentItems[index].comments[commentIndex].unlikeSelected){
+                    this.ContentItems[index].comments[commentIndex].unlikeSelected=false;
+                }else{
+                    if (this.ContentItems[index].comments[commentIndex].likeSelected) {
+                        this.likeComment(index,commentIndex,id,'route');
+                    }
+                    this.ContentItems[index].comments[commentIndex].unlikeSelected=true;
+                } 
+            },
+            //赞
+            likeComment:function(index,commentIndex,id,route){
+                let selected=this.ContentItems[index].comments[commentIndex].likeSelected;
+                var _like;
+                if (selected) {
+                    _like=this.ContentItems[index].comments[commentIndex].like-1;
+                }else{
+                    _like=this.ContentItems[index].comments[commentIndex].like+1;
+                }  
+                var item={
+                    _id:id,
+                    like:_like
+                }
+                this.$http.post('server/comments/updateLike',item).then(
+                    function (res) {
+                          // 处理成功的结果
+                          if (res.data.success) {
+                            this.ContentItems[index].comments[commentIndex].like=_like;
+                            this.ContentItems[index].comments[commentIndex].likeSelected=!selected;
+                            if (route===undefined) {
+                                this.ContentItems[index].comments[commentIndex].unlikeSelected=false;
+                            }
+                            return;
+                        }
+                        else{
+                            alert(res.data.error);
+                        }
+                    },function (res) {
+                      // 处理失败的结果
+                      alert(res.data);
+                })                  
+            },
+            // 删除评论！
+            deleteComment:function(index,commentIndex,id,qID){
+                var item={
+                    _id:id,
+                    q:qID
+                }
+                this.$confirm('此操作将永久评论及其回复, 是否继续?', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      type: 'warning'
+                    }).then(() => {
+                      this.$http.post('server/comments/delete',item).then(
+                        function (res) {
+                              // 处理成功的结果
+                              if (res.data.success) {
+                                this.ContentItems[index].comment--;
+                                this.ContentItems[index].comments=res.data.comments;
+                                 this.$message({
+                                    message: '评论删除成功！',
+                                    type: 'success'
+                                });
+                                return;
+                            }
+                            else{
+                                this.$message.error(res.data);
+                            }
+                        },function (res) {
+                          // 处理失败的结果
+                          this.$message.error(res.data);
+                      })                    
+                    }).catch(() => {
+                      this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                      });          
+                });                  
             }
         }
     }
@@ -616,6 +729,11 @@
                     overflow:hidden;
                     margin-top: 10px;
                     margin-bottom: 10px;
+                }
+                .buttons{
+                    .selected{
+                        color:#2d84cc;
+                    }
                 }
             }
         }
