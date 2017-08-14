@@ -24,6 +24,8 @@ mongoose.connect('mongodb://localhost/fangzhihu') //连接本地数据库
 
 var app = express();
 
+app.use(express.static(path.join(__dirname, 'dist')));//配置前端代码路径
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

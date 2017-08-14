@@ -51,6 +51,13 @@ vue + element-ui+ vuex + vue-router + es6/7
 - [x] 发表问题 -- 完成
 - [x] 问题赞同和反对 -- 完成
 - [x] 问题删除 -- 完成
-- [x] 评论 -- 完成
+- [x] 评论及回复 -- 完成
 - [x] 搜索 -- 未完成
 - [x] 收藏 -- 未完成
+
+
+>  vue 移动到express服务器下的方法
+
+1、将vue bulid的dist文件夹移动到服务器。注意bulid前将ajax请求中的/server全部去掉
+2、在app.js中配置前端代码路径
+app.use(express.static(path.join(__dirname, 'dist')));
